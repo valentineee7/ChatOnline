@@ -1,26 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatDate } from "../helpers/formatDate";
 import { supabase } from "../supabaseCliente";
 
-
 const Message = ({ message, date, email }) => {
+  const [user, setUser] = useState("");
 
   const getSession = async () => {
-    const data = await supabase.auth.getSession();
-    console.log(data);
-  }
+    const { data } = await supabase.auth.getSession();
+    setUser(data.session.user.email);
+  };
 
   useEffect(() => {
-    getSession()
-  }, [])
+    getSession();
+  }, []);
 
   return (
-    <div className="card">
+    <div className={`card ${user === email ? "me" : ""}`}>
       <p>{message}</p>
       <span>{formatDate(date)}</span>
-      <span className=" user-mail">{email}</span>
+      <span className="user-email">{email.split("@")[0]}</span>
     </div>
   );
-}
+};
 
 export default Message;
